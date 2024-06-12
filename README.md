@@ -30,6 +30,11 @@ La aplicación estará disponible en localhost:3000.
 4. Enfoque Adoptado
 El sistema está dividido en componentes para mantener una estructura modular y fácil de mantener. Se ha prestado especial atención a la responsividad, utilizando las bibliotecas Material-UI y Bootstrap para garantizar una experiencia de usuario coherente en diferentes dispositivos.
 
+## Errores generados
+
+Durante el desarrollo de la aplicación se encontraron diversas dificultades, las principales son referente al uso de librerías no actualizadas para la versión de React utilizada en el desarrollo, por lo que generan errores, sin embargo estos no afectan al funcionamiento y se espera una proxima actualización en un futuro cercano.
+
+## Capturas de pantalla
 
 A continuación se muestran capturas de pantalla del dashboard en diferentes estados:
 
