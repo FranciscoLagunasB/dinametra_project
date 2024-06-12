@@ -1,0 +1,20 @@
+.container-chart{
+    width: 100%;
+  
+    @media screen and (max-width: 768px) {
+    }
+  }
+
+.container-recharts {
+    padding-top: 30px;
+    width: 100%;
+    overflow: hidden; /* Evita que el contenido se desborde fuera del contenedor */
+
+    @media screen and (max-width: 768px) {
+        /* Estilos para pantallas con un ancho máximo de 768px (tamaño de tabletas y móviles) */
+        background: lightblue; /* Cambia el color de fondo para adaptarse a la versión móvil */
+        padding: 10px; /* Agrega un espacio de relleno para mejorar la apariencia en dispositivos móviles */
+        overflow: hidden; /* Evita que el contenido se desborde fuera del contenedor */
+        overflow: auto; /* Habilita el desplazamiento automático cuando el contenido es más grande que el contenedor */
+    }
+}

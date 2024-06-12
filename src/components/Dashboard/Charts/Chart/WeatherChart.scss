@@ -1,0 +1,9 @@
+.chart-container {
+    width: 100%; // Ancho completo en todos los dispositivos
+    height: 400px; // Altura fija, puedes ajustarla según tus necesidades
+  
+    @media screen and (max-width: 767px) { // Ajuste para dispositivos móviles
+      height: 600px; // Aumenta la altura en dispositivos móviles para mejorar la legibilidad
+    }
+  }
+  
