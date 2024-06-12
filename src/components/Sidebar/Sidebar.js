@@ -11,7 +11,7 @@ function Sidebar() {
                     <span>Dashboard</span>
                 </a>
             </li>
-            <li className='nav-item'>
+            {/* <li className='nav-item'>
                 <a
                     className='nav-link collapsed'
                     data-bs-target="#components-nav"
@@ -19,7 +19,7 @@ function Sidebar() {
                     href="#a"
                     >
                         <i className='bi bi-menu-button-wide'></i>
-                        <span>Documents</span>
+                        <span>Extra</span>
                         <i className='bi bi-chevron-down ms-auto'></i>
                 </a>
                 <ul 
@@ -29,17 +29,17 @@ function Sidebar() {
                 <li className='nav-item'>
                     <a href='#a'>
                         <i className='bi bi-circle'></i>
-                        <span>Customer</span>
+                        <span>Extra</span>
                     </a>
                 </li>
                 <li className='nav-item'>
                     <a href='#a'>
                         <i className='bi bi-circle'></i>
-                        <span>Customer</span>
+                        <span>Extra</span>
                     </a>
                 </li>
-            </ul>
-            </li>
+                </ul>
+            </li> */}
         </ul>
       
     </aside>

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
+
 import './Form.scss';
+import { CITIES } from '../../../api/cities'
 
 const Form = ({ newLocation }) => {
     const [state, setState] = useState();
@@ -9,7 +11,7 @@ const Form = ({ newLocation }) => {
 
     useEffect(() => {
         // Llamar al API para obtener la lista de estados
-        fetch(`https://continentl.com/api/country-list?page=1&key=sk-ziUE666763bf6ecd9270`)
+        fetch(`https://continentl.com/api/country-list?page=1&key=sk-10he666919e7f2496272`)
             .then(response => response.json())
             .then(data => {
                 let options = new Set(); // Usar un conjunto para eliminar duplicados
@@ -19,18 +21,32 @@ const Form = ({ newLocation }) => {
                 if (country.states) {
                     country.states.forEach(state => options.add(state));
                 }
-            });
+                });
 
-            setStateOptions(Array.from(options));
+                const optionsArray = Array.from(options);
+
+                setStateOptions(Array.from(options));
+                // Si las opciones del API están vacías, agrega las opciones adicionales
+                if (optionsArray.length === 0) {
+                    setStateOptions([...CITIES]);
+                } else {
+                    setStateOptions(optionsArray);
+                }
             })
-            .catch(error => console.error('Error fetching data:', error));
-    }, []);
+            .catch(
+                error => {
+                    console.error('Error fetching data:', error);
+                    setStateOptions([...CITIES]);
+                }
+                );
+            }, []);
+            
+            const onSubmit = (e) => {
+                e.preventDefault();
+                if (state === "" || !state) return;
+                newLocation(state);
+                };
 
-    const onSubmit = (e) => {
-        e.preventDefault();
-        if (state === "" || !state) return;
-        newLocation(state);
-    };
 
     return (
         <div className="container">
