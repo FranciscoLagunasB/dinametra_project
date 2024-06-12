@@ -18,7 +18,7 @@ function WheaterPanel() {
 
     const getLocation = async(loc) => {
 
-        let city_NAME= `http://api.openweathermap.org/geo/1.0/direct?q=${loc}&appid=${API_KEY}`
+        let city_NAME= `https://api.openweathermap.org/geo/1.0/direct?q=${loc}&appid=${API_KEY}`
         
         let location_res;
         let latResult = ""
