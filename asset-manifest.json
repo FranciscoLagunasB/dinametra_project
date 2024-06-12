@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/dinametra_project/static/css/main.7a731201.css",
+    "main.js": "/dinametra_project/static/js/main.b17f650a.js",
+    "static/js/453.736bf709.chunk.js": "/dinametra_project/static/js/453.736bf709.chunk.js",
+    "static/media/remixicon.svg?t=1708865856766": "/dinametra_project/static/media/remixicon.7735fab8dbf8ff78afe9.svg",
+    "static/media/remixicon.eot?t=1708865856766": "/dinametra_project/static/media/remixicon.8542c1bb279bcd77063a.eot",
+    "static/media/remixicon.ttf?t=1708865856766": "/dinametra_project/static/media/remixicon.4c942de19d980993f612.ttf",
+    "static/media/remixicon.woff?t=1708865856766": "/dinametra_project/static/media/remixicon.28ceff39ee3e17dc99db.woff",
+    "static/media/bootstrap-icons.woff?": "/dinametra_project/static/media/bootstrap-icons.39795c0b4513de014cf8.woff",
+    "static/media/remixicon.woff2?t=1708865856766": "/dinametra_project/static/media/remixicon.39f4def56d0e8712909a.woff2",
+    "static/media/bootstrap-icons.woff2?": "/dinametra_project/static/media/bootstrap-icons.b7bcc075b395c14ce8c2.woff2",
+    "index.html": "/dinametra_project/index.html",
+    "main.7a731201.css.map": "/dinametra_project/static/css/main.7a731201.css.map",
+    "main.b17f650a.js.map": "/dinametra_project/static/js/main.b17f650a.js.map",
+    "453.736bf709.chunk.js.map": "/dinametra_project/static/js/453.736bf709.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.7a731201.css",
+    "static/js/main.b17f650a.js"
+  ]
+}
