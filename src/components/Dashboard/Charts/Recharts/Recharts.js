@@ -3,7 +3,11 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'r
 
 function Recharts({ data }) {
   return (
-    <div className="chart-container">
+    <div className="chart-container mt-4">
+      <div className="chart-header">
+        <h2 className="chart-title">Gráfico de Clima</h2>
+        <p className="chart-description">Este gráfico muestra la temperatura y la humedad en diferentes momentos.</p>
+      </div>
       <LineChart
         width={800}
         height={400}

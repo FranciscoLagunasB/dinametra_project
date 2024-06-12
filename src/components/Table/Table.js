@@ -8,12 +8,12 @@ import './Table.scss'
 function Table({ showData, weatherHistory }) {
     const columns = [
         { field: 'id', headerName: 'ID', width: 100 },
-        { field: 'dateTime', headerName: 'Date & Time', width: 200 },
-        { field: 'weather', headerName: 'Weather', width: 150 },
-        { field: 'temperature', headerName: 'Temperature (°C)', width: 200 },
-        { field: 'humidity', headerName: 'Humidity (%)', width: 150 },
-        { field: 'windSpeed', headerName: 'Wind Speed (km/h)', width: 200 },
-        { field: 'windDirection', headerName: 'Wind Direction', width: 200 },
+        { field: 'dateTime', headerName: 'Fecha y tiempo', width: 200 },
+        { field: 'weather', headerName: 'Clima', width: 150 },
+        { field: 'temperature', headerName: 'Temperatura (°C)', width: 200 },
+        { field: 'humidity', headerName: 'Humedad (%)', width: 150 },
+        { field: 'windSpeed', headerName: 'Velocidad del viento (km/h)', width: 200 },
+        { field: 'windDirection', headerName: 'Direccón del viento', width: 200 },
     ];
 
     let rows = weatherHistory.map((row, index) => ({ id: index + 1, ...row }));
@@ -46,7 +46,7 @@ function Table({ showData, weatherHistory }) {
 
         { showData === true ? (
             <div style={{ width: '100%' }}>
-                <h2>Weather Charts</h2>
+                <h2>Registro Meteorológico</h2>
 
                 <div style={{ height: 400, width: '100%' }}>
                     <DataGrid
@@ -60,15 +60,16 @@ function Table({ showData, weatherHistory }) {
                     />
                     </div>
                     
+                <div className="container-recharts">
+                    {/* Llama al componente WeatherChart y pasa los datos filtrados como prop */}
+                    <Recharts data={filteredRows.length > 0 ? filteredRows : rows}/>
+                </div>
+                
                 <div className="container-chart">
                     {/* Llama al componente WeatherChart y pasa los datos filtrados como prop */}
                     <WeatherChart data={filteredRows.length > 0 ? filteredRows : rows}/>
                 </div>
 
-                <div className="container-recharts">
-                    {/* Llama al componente WeatherChart y pasa los datos filtrados como prop */}
-                    <Recharts data={filteredRows.length > 0 ? filteredRows : rows}/>
-                </div>
 
             </div>
             

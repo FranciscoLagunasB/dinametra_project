@@ -10,7 +10,7 @@ function Logo() {
         <div className='d-flex align-items-center justify-content-between'>
             <a href='/' className='logo d-flex align-items-center'>
                 {/* <img src=''/> */}
-                <span className="d-none d-lg-block">Admin dashboard</span>
+                <span className="d-none d-lg-block">Weather App</span>
             </a>
             <i
             className='bi bi-list toggle-sidebar-btn'

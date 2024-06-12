@@ -67,7 +67,11 @@ function WeatherChart({ data }) {
   }, [data]);
 
   return (
-    <div className="chart-container">
+    <div className="chart-container mt-4">
+      <div className="chart-header">
+        <h2 className="chart-title">Gráfico de Clima</h2>
+        <p className="chart-description">Este gráfico muestra la temperatura y la humedad en diferentes momentos.</p>
+      </div>
       <canvas ref={chartRef}></canvas>
     </div>
   );

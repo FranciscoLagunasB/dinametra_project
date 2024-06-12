@@ -34,19 +34,24 @@ const Form = ({ newLocation }) => {
 
     return (
         <div className="container">
+            <div className="mb-4">
+                <p style={{ fontSize: "1.5rem", color: "#333" }}>
+                    Realice una búsqueda del clima de la ciudad de su elección.
+                </p>
+            </div>
             <form onSubmit={onSubmit}>
-                <div className="input-group mb-3 mx-auto">
+                <div className="input-group mb-3 mx-auto d-flex justify-content-center">
                     <Autocomplete
                         disablePortal
                         id="state-autocomplete"
                         options={stateOptions}
-                        sx={{ width: 300 }}
+                        sx={{ width: '55%' }}
                         renderInput={(params) => <TextField {...params} label="Ciudad" />}
                         value={state || ""}
                         onChange={(event, newValue) => setState(newValue)}
                         isOptionEqualToValue={(options, value) => options.valueOf === value.valueOf}
                     />
-                    <button className="btn btn-primary input-group-text" type="submit">Buscar</button>
+                    <button className="btn btn-outline-secondary input-group-text" >Buscar</button>
                 </div>
             </form>
         </div>

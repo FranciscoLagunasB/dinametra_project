@@ -1,6 +1,13 @@
 import React from 'react'
 import './Card.scss'
 import Spinner from '../../Spinner/Spinner'
+import {
+    MDBCard,
+    MDBCardBody,
+    MDBCol,
+    MDBContainer,
+    MDBRow,
+  } from "mdb-react-ui-kit";
 
 function Card({loadingData, showData, weather, forecast}) {
     var today = new Date();
@@ -39,65 +46,111 @@ function Card({loadingData, showData, weather, forecast}) {
 
     return (
         <div className="mt-5">
-
             {
                 showData === true ? (
-
-                    <div className="container">
-                        <div className="card mb-3 mx-auto bg-dark text-light">
-                            <div className="row g-0">
-                                <div className="col-md-4">
-                                    <h3 className="card-title">{weather.name}</h3>
-                                    <p className="card-date">{date}</p>
-                                    <h1 className="card-temp">{(weather.main.temp - 273.15).toFixed(1)}ºC</h1>
-                                    <p className="card-desc"><img src={iconUrl} alt="icon"/>{weather.weather[0].description}</p>
-                                    <img src="https://images.pexels.com/photos/10817264/pexels-photo-10817264.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" className="img-fluid rounded-start" alt="..."/>
-                                </div>
-                                <div className="col-md-8">
-                                    <div className="card-body text-start mt-2">
-                                        <h5 className="card-text">Temperatura máxima: {(weather.main.temp_max - 273.15).toFixed(1)}ºC</h5>
-                                        <h5 className="card-text">Temperatura mínima: {(weather.main.temp_min - 273.15).toFixed(1)}ºC</h5>
-                                        <h5 className="card-text">sensación térmica: {(weather.main.feels_like- 273.15).toFixed(1)}ºC</h5>
-                                        <h5 className="card-text">Humedad: {weather.main.humidity}%</h5>
-                                        <h5 className="card-text">Velocidad del viento: {weather.wind.speed}m/s</h5>
-                                    </div>
-                                    <hr/>
-
-                                    <div className="row mt-4">
-                                        <div className="col">
-                                            <p>{forecastDate3}h</p>
-                                            <p className="description"><img src={iconUrl3} alt="icon"/>{forecast.list[1].weather[0].description}</p>
-                                            <p className="temp">{(forecast.list[1].main.temp - 273.15).toFixed(1)}ºC</p>
-                                        </div>
-                                        <div className="col">
-                                            <p>{forecastDate6}h</p>
-                                            <p className="description"><img src={iconUrl6} alt="icon"/>{forecast.list[2].weather[0].description}</p>
-                                            <p className="temp">{(forecast.list[2].main.temp - 273.15).toFixed(1)}ºC</p>
-                                        </div>
-                                        <div className="col">
-                                            <p>{forecastDate9}h</p>
-                                            <p className="description"><img src={iconUrl9} alt="icon"/>{forecast.list[3].weather[0].description}</p>
-                                            <p className="temp">{(forecast.list[3].main.temp - 273.15).toFixed(1)}ºC</p>
-                                        </div>
-
-
-                                    </div>
-
-
-                                </div>
-
-                            </div>
+                    <section>
+                        <div className="text-left mb-4">
+                            <p style={{ fontSize: "1.1rem", color: "#333", marginLeft: "10px"}}>
+                                A continuación, encontrarás un resumen detallado del clima para la ciudad seleccionada:
+                            </p>
                         </div>
+                        <MDBContainer fluid>
+                            <MDBRow className="justify-content-center align-items-center">
+                                {/* Contenedor 1 */}
+                                <MDBCol lg="12" className="mb-4">
+                                    <MDBCard className="mb-4 gradient-custom" style={{ borderRadius: "25px" }}>
+                                    <MDBCardBody className="p-4">
+                                        <div className="d-flex flex-column flex-md-row justify-content-center pb-2"> {/* Utiliza flex-column en dispositivos móviles y flex-md-row en tamaños de pantalla más grandes */}
+                                            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", marginBottom: "20px", marginRight: "0" }}> {/* Añadido marginBottom para separar los elementos en dispositivos móviles */}
+                                                <h2 className="display-2">
+                                                    <strong>{(weather.main.temp - 273.15).toFixed(1)}ºC</strong>
+                                                </h2>
+                                                <p className="text-muted mb-0">{weather.name}</p>
+                                                <p className="text-muted mb-0">{date}</p>
+                                            </div>
+                                            <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                                                <img src={iconUrl} alt="icon" width="150px"/>
+                                                <p className="card-desc">{weather.weather[0].description}</p>
+                                            </div>
+                                        </div>
+                                    </MDBCardBody>
+                                    </MDBCard>
+                                </MDBCol>
 
+                                {/* Contenedor 2 */}
+                                <MDBCol lg="6" className="mb-4">
+                                    <MDBCard className="mb-4 gradient-custom" style={{ borderRadius: "25px", minHeight: "200px" }}>
+                                        <MDBCardBody className="p-4">
+                                            <div className="d-flex justify-content-center align-items-center">
+                                                <div>
+                                                    <p className="text-muted mb-0"><strong>Temperatura máxima: </strong>{(weather.main.temp_max - 273.15).toFixed(1)}ºC</p>
+                                                    <p className="text-muted mb-0"><strong>Temperatura mínima: </strong>{(weather.main.temp_min - 273.15).toFixed(1)}ºC</p>
+                                                    <p className="text-muted mb-0"><strong>Sensación térmica: </strong>{(weather.main.feels_like- 273.15).toFixed(1)}ºC</p>
+                                                    <p className="text-muted mb-0"><strong>Humedad: </strong>{weather.main.humidity}%</p>
+                                                    <p className="text-muted mb-0"><strong>Velocidad del viento: </strong>{weather.wind.speed}m/s</p>
+                                                </div>
+                                            </div>
+                                        </MDBCardBody>
+                                    </MDBCard>
+                                </MDBCol>
+
+                                {/* Contenedor 3 */}
+                                <MDBCol lg="6" className="mb-4">
+                                    <MDBCard className="mb-4 gradient-custom" style={{ borderRadius: "25px", minHeight: "200px" }}>
+                                        <MDBCardBody className="p-4" style={{ overflowX: "auto" }}>
+                                        <div className="d-flex justify-content-between">
+                                    <div className="flex-column" style={{ marginRight: "10px", marginBottom: "10px" }}>
+                                        <p className="small">
+                                            <strong>{forecastDate3}h</strong>
+                                        </p>
+                                        <img src={iconUrl3} alt="icon" style={{ color: "#ddd" }} className='mb-3'/>
+                                        <p className="mb-0">
+                                            <strong>{forecast.list[1].weather[0].description}</strong>
+                                        </p>
+                                        <p className="mb-0 text-muted" style={{ fontSize: ".65rem" }}>
+                                            {(forecast.list[1].main.temp - 273.15).toFixed(1)}ºC
+                                        </p>
+                                    </div>
+                                    <div className="flex-column" style={{ marginRight: "10px", marginBottom: "10px" }}>
+                                        <p className="small">
+                                            <strong>{forecastDate6}h</strong>
+                                        </p>
+                                        <img src={iconUrl6} alt="icon" style={{ color: "#ddd" }} className='mb-3'/>
+                                        <p className="mb-0">
+                                            <strong>{forecast.list[2].weather[0].description}</strong>
+                                        </p>
+                                        <p className="mb-0 text-muted" style={{ fontSize: ".65rem" }}>
+                                            {(forecast.list[2].main.temp - 273.15).toFixed(1)}ºC
+                                        </p>
+                                    </div>
+                                    <div className="flex-column">
+                                        <p className="small">
+                                            <strong>{forecastDate9}h</strong>
+                                        </p>
+                                        <img src={iconUrl9} alt="icon" style={{ color: "#ddd" }} className='mb-3'/>
+                                        <p className="mb-0">
+                                            <strong>{forecast.list[3].weather[0].description}</strong>
+                                        </p>
+                                        <p className="mb-0 text-muted" style={{ fontSize: ".65rem" }}>
+                                            {(forecast.list[3].main.temp - 273.15).toFixed(1)}ºC
+                                        </p>
+                                    </div>
+                                    </div>
+                                        </MDBCardBody>
+                                    </MDBCard>
+                                </MDBCol>
+                            </MDBRow>
+                        </MDBContainer>
+                    </section>
+
+
+                ):(
+                    <div className="text-center mb-4">
+                        <p style={{ fontSize: "1rem", color: "#666" }}>Aquí aparecerá tu búsqueda</p>
                     </div>
-
-                ):(<h3>Realiza una busqueda del clima de la ciudad que desees</h3>)
+                )
             }
-
-
-
         </div>
-
     );
 }
 

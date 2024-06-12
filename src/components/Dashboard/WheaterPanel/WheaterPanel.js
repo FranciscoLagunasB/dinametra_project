@@ -35,11 +35,6 @@ function WheaterPanel() {
                  // Asignar valores a las variables fuera de la cadena de promesas
                 latResult = lat;
                 lonResult = lon;
-
-                // if (!lat || !lon) {
-                //     toast.error("Ubicación exacta no encontrada");
-                //     throw new Error("Ubicación exacta no encontrada");
-                // }
             })
             .catch(error => {
                 setLoading(false);
