@@ -1,40 +1,58 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import WeatherChart from '../Dashboard/Charts/Chart/WeatherChart';
-import Recharts from '../Dashboard/Charts/Recharts/Recharts';
+import IconButton from '@mui/material/IconButton';
+import EditIcon from '@mui/icons-material/Edit';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import DeleteIcon from '@mui/icons-material/Delete';
+
 
 import './Table.scss'
 
-function Table({ showData, weatherHistory }) {
+function Table({ showData, DATA }) {
+
     const columns = [
-        { field: 'id', headerName: 'ID', width: 100 },
-        { field: 'dateTime', headerName: 'Fecha y tiempo', width: 200 },
-        { field: 'weather', headerName: 'Clima', width: 150 },
-        { field: 'temperature', headerName: 'Temperatura (°C)', width: 200 },
-        { field: 'humidity', headerName: 'Humedad (%)', width: 150 },
-        { field: 'windSpeed', headerName: 'Velocidad del viento (km/h)', width: 200 },
-        { field: 'windDirection', headerName: 'Direccón del viento', width: 200 },
+        // { field: 'contacto_PK', headerName: 'ID', flex: 1},
+        { field: 'nombres', headerName: 'Nombre', flex: 1},
+        { field: 'apellido_paterno', headerName: 'Apellido Paterno', flex: 1},
+        { field: 'apellido_materno', headerName: 'Apellido Materno', flex: 1},
+        { field: 'fecha_nacimiento', headerName: 'Fecha de nacimiento', flex: 1},
+        { field: 'alias', headerName: 'Alias', flex: 1},
+        { 
+            field: 'acciones', 
+            headerName: 'Acciones', 
+            flex: 1,
+            renderCell: (params) => (
+                <>
+                    <IconButton onClick={() => handleView(params.contacto_PK)} title="Ver">
+                        <VisibilityIcon />
+                    </IconButton>
+                    <IconButton onClick={() => handleEdit(params.contacto_PK)} title="Editar">
+                        <EditIcon />
+                    </IconButton>
+                    <IconButton onClick={() => handleDelete(params.contacto_PK)} title="Eliminar">
+                        <DeleteIcon />
+                    </IconButton>
+                </>
+            ),
+        },
     ];
 
-    let rows = weatherHistory.map((row, index) => ({ id: index + 1, ...row }));
-
-    
-    const [filteredRows, setFilteredRows] = useState([]);
-    const handleFilterModelChange = (filterModel) => {
-        const filteredItems = filterModel.items;
-
-        // Filtrar las filas basadas en los datos filtrados
-        const filteredData = rows.filter(row => {
-            return filteredItems.every(item => {
-                // Verificar si el valor de la columna cumple con el criterio de filtrado
-                return row[item.field] && row[item.field].toString().includes(item.value);
-            });
-        });
-
-        // Establecer los datos filtrados en el estado filteredRows
-        setFilteredRows(filteredData);
+    const handleView = (id) => {
+        // Lógica para mostrar detalle del registro
+        console.log(`Ver registro con ID ${id}`);
     };
 
+    const handleEdit = (id) => {
+        // Lógica para editar el registro
+        console.log(`Editar registro con ID ${id}`);
+    };
+
+    const handleDelete = (id) => {
+        // Lógica para eliminar el registro
+        console.log(`Eliminar registro con ID ${id}`);
+    };
+
+    let rows = DATA.map((row, index) => ({ id: index + 1, ...row }));
 
       let data= {
         rows: rows,
@@ -51,28 +69,14 @@ function Table({ showData, weatherHistory }) {
                 <div style={{ height: 400, width: '100%' }}>
                     <DataGrid
                         {...data}
-                        onFilterModelChange={handleFilterModelChange}
                         initialState={{
                         ...data.initialState,
                         pagination: { paginationModel: { pageSize: 5 } },
                         }}
                         pageSizeOptions={[5, 10, 25]}
                     />
-                    </div>
-                    
-                <div className="container-recharts">
-                    {/* Llama al componente WeatherChart y pasa los datos filtrados como prop */}
-                    <Recharts data={filteredRows.length > 0 ? filteredRows : rows}/>
                 </div>
-                
-                <div className="container-chart">
-                    {/* Llama al componente WeatherChart y pasa los datos filtrados como prop */}
-                    <WeatherChart data={filteredRows.length > 0 ? filteredRows : rows}/>
-                </div>
-
-
             </div>
-            
             ):(<></>)
         }
         </>

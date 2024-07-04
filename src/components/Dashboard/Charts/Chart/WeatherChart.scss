@@ -1,9 +1,0 @@
-.chart-container {
-    width: 100%; // Ancho completo en todos los dispositivos
-    margin-bottom: "80px";
-  
-    @media screen and (max-width: 767px) { // Ajuste para dispositivos móviles
-      margin-bottom: "20px"
-    }
-  }
-  

@@ -1,13 +1,13 @@
 import React from 'react';
 import './Main.scss';
 import PageTitle from '../PageTitle/PageTitle';
-import WheaterPanel from '../Dashboard/WheaterPanel/WheaterPanel';
+import ContactsPanel from '../Dashboard/ContactsPanel/ContactsPanel';
 
 function Main({page}) {
   return (
     <main id='main' className='main'>
         <PageTitle page="Dashboard"/>
-        <WheaterPanel/>
+        <ContactsPanel/>
     </main>
   )
 }

@@ -68,12 +68,12 @@ export default NavNotifications;
 const notificationsData = [
   {
     id: 1,
-    message: 'Juan te ha enviado una solicitud de amistad.',
+    message: '[Prueba] Se ha ingresado un nuevo registro',
     time: 'hace 5 minutos'
   },
   {
     id: 2,
-    message: 'María ha comentado en tu publicación.',
+    message: '[Prueba] Se ha ingresado un nuevo registro',
     time: 'hace 1 hora'
   },
   {
