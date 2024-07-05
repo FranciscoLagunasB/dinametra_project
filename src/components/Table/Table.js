@@ -1,14 +1,23 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import DeleteIcon from '@mui/icons-material/Delete';
-
+import ContactForm from '../Dashboard/Form/ContactForm';
+import axios from 'axios';
 
 import './Table.scss'
 
-function Table({ showData, DATA }) {
+function Table({ showData, DATA, setDATA  }) {
+
+    const [editData, setEditData] = useState(null); // Estado para almacenar datos de edición
+    const [isEditing, setIsEditing] = useState(false);
+    // const [showView, setShowView] = useState(true);
+
+    const toggleShowView = () => {
+        setIsEditing(!isEditing);
+    };
 
     const columns = [
         // { field: 'contacto_PK', headerName: 'ID', flex: 1},
@@ -23,13 +32,13 @@ function Table({ showData, DATA }) {
             flex: 1,
             renderCell: (params) => (
                 <>
-                    <IconButton onClick={() => handleView(params.contacto_PK)} title="Ver">
+                    <IconButton onClick={() => handleView(params.row.contacto_PK)} title="Ver">
                         <VisibilityIcon />
                     </IconButton>
-                    <IconButton onClick={() => handleEdit(params.contacto_PK)} title="Editar">
+                    <IconButton onClick={() => handleEdit(params.row)} title="Editar">
                         <EditIcon />
                     </IconButton>
-                    <IconButton onClick={() => handleDelete(params.contacto_PK)} title="Eliminar">
+                    <IconButton onClick={() => handleDelete(params.row.contacto_PK)} title="Eliminar">
                         <DeleteIcon />
                     </IconButton>
                 </>
@@ -37,20 +46,36 @@ function Table({ showData, DATA }) {
         },
     ];
 
+
     const handleView = (id) => {
         // Lógica para mostrar detalle del registro
         console.log(`Ver registro con ID ${id}`);
     };
 
-    const handleEdit = (id) => {
-        // Lógica para editar el registro
-        console.log(`Editar registro con ID ${id}`);
+    const handleEdit = (row) => {
+        toggleShowView(); // Cambiar la vista
+        setEditData(row); // Almacenar datos del registro a editar
+        setIsEditing(true);
     };
 
-    const handleDelete = (id) => {
-        // Lógica para eliminar el registro
-        console.log(`Eliminar registro con ID ${id}`);
-    };
+    const handleDelete = async (id) => {
+        try {
+            // Realizar la llamada DELETE al backend para eliminar el registro
+            const response = await axios.delete(`http://localhost:8000/api/contactos/${id}/`);
+
+            // Verificar si la eliminación fue exitosa en la respuesta del backend
+            if (response.status === 204) {
+                // Eliminar el registro del estado local DATA
+                const updatedData = DATA.filter((item) => item.id !== id);
+                setDATA(updatedData);
+                console.log(`Registro con ID ${id} eliminado correctamente`);
+            } else {
+                console.log(`Error al eliminar el registro con ID ${id}`);
+            }
+        } catch (error) {
+            console.error('Error al intentar eliminar el registro:', error);
+        }
+    }
 
     let rows = DATA.map((row, index) => ({ id: index + 1, ...row }));
 
@@ -79,6 +104,13 @@ function Table({ showData, DATA }) {
             </div>
             ):(<></>)
         }
+        
+        {isEditing && (
+                <ContactForm
+                    isEdit={true}
+                    contactData={editData}
+                    onClose={() => setIsEditing(false)}/>
+            )}
         </>
     );
 }
