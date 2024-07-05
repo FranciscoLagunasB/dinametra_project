@@ -1,12 +1,10 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 
-const ContactForm = ({ showView, isEdit, contactData }) => {
+const ContactForm = ({ 
+    showView, isEdit, contactData, functionUpdate, functionToggleView, functionToggleEditView,
+    functionAddedData }) => {
 
-    console.log(contactData)
-
-    console.log(contactData)
-    console.log(isEdit)
     const initialState = useMemo(() => ({
         nombres: '',
         apellido_paterno: '',
@@ -21,13 +19,6 @@ const ContactForm = ({ showView, isEdit, contactData }) => {
 
     const [contacto, setContacto] = useState(initialState);
     const [canEdit, setCanEdit] = useState(false);
-
-    console.log(contactData)
-
-    useEffect(() => {
-        console.log(contactData)
-    }, [isEdit, contactData]);
-
 
     useEffect(() => {
         if (isEdit && contactData) {
@@ -170,10 +161,56 @@ const ContactForm = ({ showView, isEdit, contactData }) => {
                 formData.append(`direcciones[${index}][codigo_postal]`, direccion.codigo_postal);
             });
 
-            // Logging formData to check its content
-            for (let pair of formData.entries()) {
-                console.log(pair[0], pair[1]);
-            }
+            let jsonContacto = {};
+            // Agregar los campos individuales directamente al objeto JSON
+            jsonContacto['nombres'] = contacto.nombres;
+            jsonContacto['apellido_paterno'] = contacto.apellido_paterno;
+            jsonContacto['apellido_materno'] = contacto.apellido_materno;
+            jsonContacto['fecha_nacimiento'] = contacto.fecha_nacimiento;
+            jsonContacto['alias'] = contacto.alias;
+            jsonContacto['foto'] = contacto.foto;
+
+            // Agregar correos al objeto JSON
+            jsonContacto['correos'] = [];
+            contacto.correos.forEach((correo) => {
+                if(correo.correo.length > 0){
+                    jsonContacto['correos'].push({ 'correo': correo.correo });
+                }
+            });
+
+            // Agregar telefonos al objeto JSON
+            jsonContacto['telefonos'] = [];
+            contacto.telefonos.forEach((telefono) => {
+                if(telefono.tipo.length > 0 || telefono.numero.length > 0){
+                    jsonContacto['telefonos'].push({ 'tipo': telefono.tipo, 'numero': telefono.numero });
+                }
+            });
+
+            // Agregar direcciones al objeto JSON
+            jsonContacto['direcciones'] = [];
+            contacto.direcciones.forEach((direccion) => {
+                if(
+                    direccion.calle.length > 0  || direccion.numero_exterior.length > 0  || 
+                    direccion.colonia.length > 0  || direccion.ciudad.length > 0  || direccion.estado.length > 0 
+                    || direccion.pais.length > 0  || direccion.codigo_postal.length > 0 ){
+                    jsonContacto['direcciones'].push({
+                        'calle': direccion.calle,
+                        'numero_exterior': direccion.numero_exterior,
+                        'colonia': direccion.colonia,
+                        'ciudad': direccion.ciudad,
+                        'estado': direccion.estado,
+                        'pais': direccion.pais,
+                        'codigo_postal': direccion.codigo_postal
+                    });
+                }
+            });
+
+            // Convertir a JSON string
+            const jsonContactoString = JSON.stringify(jsonContacto);
+
+            console.log(jsonContactoString)
+
+            console.log(formData)
 
             let apiUrl = 'http://localhost:8000/api/contactos/';
             if (isEdit) {
@@ -181,8 +218,16 @@ const ContactForm = ({ showView, isEdit, contactData }) => {
             }
 
             const response = isEdit
-                ? await axios.put(apiUrl, formData)
-                : await axios.post(apiUrl, formData);
+                ? await axios.put(apiUrl, jsonContactoString)
+                : await axios.post(apiUrl, jsonContactoString);
+
+            if(isEdit){
+                functionUpdate(response)
+                functionToggleEditView()
+            }else{
+                functionAddedData(response)
+                functionToggleView()
+            }
 
             console.log('Contacto guardado:', response.data);
             // Lógica adicional después de enviar los datos
@@ -194,68 +239,68 @@ const ContactForm = ({ showView, isEdit, contactData }) => {
 
     return (
         <>
-        { showView ?
-            (<></>) : 
-            (
-            <div>
-                <h2>{isEdit ? 'Editar Contacto' : 'Crear Nuevo Contacto'}</h2>
-                <form onSubmit={handleSubmit} encType="multipart/form-data">
-                    <label>Nombres:</label>
-                    <input type="text" name="nombres" value={contacto.nombres} onChange={handleInputChange} required />
+            { showView ?
+                (<></>) : 
+                (
+                    <div>
+                        <h2>{isEdit ? 'Editar Contacto' : 'Crear Nuevo Contacto'}</h2>
+                        <form onSubmit={handleSubmit} encType="multipart/form-data">
+                            <label>Nombres:</label>
+                            <input type="text" name="nombres" value={contacto.nombres} onChange={handleInputChange} required />
 
-                    <label>Apellido Paterno:</label>
-                    <input type="text" name="apellido_paterno" value={contacto.apellido_paterno} onChange={handleInputChange} required />
+                            <label>Apellido Paterno:</label>
+                            <input type="text" name="apellido_paterno" value={contacto.apellido_paterno} onChange={handleInputChange} required />
 
-                    <label>Apellido Materno:</label>
-                    <input type="text" name="apellido_materno" value={contacto.apellido_materno} onChange={handleInputChange} required />
+                            <label>Apellido Materno:</label>
+                            <input type="text" name="apellido_materno" value={contacto.apellido_materno} onChange={handleInputChange} required />
 
-                    <label>Fecha de Nacimiento:</label>
-                    <input type="date" name="fecha_nacimiento" value={contacto.fecha_nacimiento} onChange={handleInputChange} required />
+                            <label>Fecha de Nacimiento:</label>
+                            <input type="date" name="fecha_nacimiento" value={contacto.fecha_nacimiento} onChange={handleInputChange} required />
 
-                    <label>Alias:</label>
-                    <input type="text" name="alias" value={contacto.alias} onChange={handleInputChange} required />
+                            <label>Alias:</label>
+                            <input type="text" name="alias" value={contacto.alias} onChange={handleInputChange} required />
 
-                    <label>Foto:</label>
-                    <input type="file" name="foto" onChange={e => setContacto({ ...contacto, foto: e.target.files[0] })} accept="image/png" />
+                            <label>Foto:</label>
+                            <input type="file" name="foto" onChange={e => setContacto({ ...contacto, foto: e.target.files[0] })} accept="image/png" />
 
-                    <h3>Correos Electrónicos:</h3>
-                    {contacto.correos.map((correo, index) => (
-                        <div key={index}>
-                            <input type="email" name="correo" value={correo.correo} onChange={e => handleCorreoChange(e, index)} required />
-                            <button type="button" onClick={() => handleRemoveCorreo(index)}>Eliminar</button>
-                        </div>
-                    ))}
-                    <button type="button" onClick={handleAddCorreo}>Agregar Correo</button>
+                            <h3>Correos Electrónicos:</h3>
+                            {contacto.correos.map((correo, index) => (
+                                <div key={index}>
+                                    <input type="email" name="correo" value={correo.correo} onChange={e => handleCorreoChange(e, index)} />
+                                    <button type="button" onClick={() => handleRemoveCorreo(index)}>Eliminar</button>
+                                </div>
+                            ))}
+                            <button type="button" onClick={handleAddCorreo}>Agregar Correo</button>
 
-                    <h3>Teléfonos:</h3>
-                    {contacto.telefonos.map((telefono, index) => (
-                        <div key={index}>
-                            <input type="text" name="tipo" placeholder="Tipo" value={telefono.tipo} onChange={e => handleTelefonoChange(e, index)} required />
-                            <input type="text" name="numero" placeholder="Número" value={telefono.numero} onChange={e => handleTelefonoChange(e, index)} required />
-                            <button type="button" onClick={() => handleRemoveTelefono(index)}>Eliminar</button>
-                        </div>
-                    ))}
-                    <button type="button" onClick={handleAddTelefono}>Agregar Teléfono</button>
+                            <h3>Teléfonos:</h3>
+                            {contacto.telefonos.map((telefono, index) => (
+                                <div key={index}>
+                                    <input type="text" name="tipo" placeholder="Tipo" value={telefono.tipo} onChange={e => handleTelefonoChange(e, index)} />
+                                    <input type="text" name="numero" placeholder="Número" value={telefono.numero} onChange={e => handleTelefonoChange(e, index)} />
+                                    <button type="button" onClick={() => handleRemoveTelefono(index)}>Eliminar</button>
+                                </div>
+                            ))}
+                            <button type="button" onClick={handleAddTelefono}>Agregar Teléfono</button>
 
-                    <h3>Direcciones:</h3>
-                    {contacto.direcciones.map((direccion, index) => (
-                        <div key={index}>
-                            <input type="text" name="calle" placeholder="Calle" value={direccion.calle} onChange={e => handleDireccionChange(e, index)} required />
-                            <input type="text" name="numero_exterior" placeholder="Número Exterior" value={direccion.numero_exterior} onChange={e => handleDireccionChange(e, index)} required />
-                            <input type="text" name="colonia" placeholder="Colonia" value={direccion.colonia} onChange={e => handleDireccionChange(e, index)} required />
-                            <input type="text" name="ciudad" placeholder="Ciudad" value={direccion.ciudad} onChange={e => handleDireccionChange(e, index)} required />
-                            <input type="text" name="estado" placeholder="Estado" value={direccion.estado} onChange={e => handleDireccionChange(e, index)} required />
-                            <input type="text" name="pais" placeholder="País" value={direccion.pais} onChange={e => handleDireccionChange(e, index)} required />
-                            <input type="text" name="codigo_postal" placeholder="Código Postal" value={direccion.codigo_postal} onChange={e => handleDireccionChange(e, index)} required />
-                            <button type="button" onClick={() => handleRemoveDireccion(index)}>Eliminar</button>
-                        </div>
-                    ))}
-                    <button type="button" onClick={handleAddDireccion}>Agregar Dirección</button>
+                            <h3>Direcciones:</h3>
+                            {contacto.direcciones.map((direccion, index) => (
+                                <div key={index}>
+                                    <input type="text" name="calle" placeholder="Calle" value={direccion.calle} onChange={e => handleDireccionChange(e, index)} />
+                                    <input type="text" name="numero_exterior" placeholder="Número Exterior" value={direccion.numero_exterior} onChange={e => handleDireccionChange(e, index)} />
+                                    <input type="text" name="colonia" placeholder="Colonia" value={direccion.colonia} onChange={e => handleDireccionChange(e, index)} />
+                                    <input type="text" name="ciudad" placeholder="Ciudad" value={direccion.ciudad} onChange={e => handleDireccionChange(e, index)} />
+                                    <input type="text" name="estado" placeholder="Estado" value={direccion.estado} onChange={e => handleDireccionChange(e, index)} />
+                                    <input type="text" name="pais" placeholder="País" value={direccion.pais} onChange={e => handleDireccionChange(e, index)} />
+                                    <input type="text" name="codigo_postal" placeholder="Código Postal" value={direccion.codigo_postal} onChange={e => handleDireccionChange(e, index)} />
+                                    <button type="button" onClick={() => handleRemoveDireccion(index)}>Eliminar</button>
+                                </div>
+                            ))}
+                            <button type="button" onClick={handleAddDireccion}>Agregar Dirección</button>
 
-                    <button type="submit" disabled={!canEdit}>{isEdit ? 'Guardar Cambios' : 'Crear Contacto'}</button>
-                </form>
-            </div>
-        ) }
+                            <button type="submit" disabled={!canEdit}>{isEdit ? 'Guardar Cambios' : 'Crear Contacto'}</button>
+                        </form>
+                    </div>
+                ) }
         </>
     );
 };

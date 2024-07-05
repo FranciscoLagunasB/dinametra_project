@@ -5,12 +5,11 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import contactosService from '../../../api/contactosService';
 
-function ContactsPanel({showView}) {
+function ContactsPanel({ showView, addedData, functionToggleEditView, isEditing,
+    toggleShowDetailsView, showDetails }) {
     const [contactos, setContactos] = useState([]);
     const [loading, setLoading] = useState(false);
     const [show, setShow] = useState(false);
-    const [searchTerm, setSearchTerm] = useState('');
-    const [searchColumn, setSearchColumn] = useState(''); // Columna seleccionada para buscar
 
     useEffect(() => {
         const fetchContactos = async () => {
@@ -27,49 +26,43 @@ function ContactsPanel({showView}) {
             }
         };
 
-            fetchContactos();
+        fetchContactos();
     }, []);
 
-    const handleSearchChange = (e) => {
-        setSearchTerm(e.target.value);
+    const updateContactosList = async () => {
+        try {
+            const data = await contactosService.getAll();
+            setContactos(data);
+        } catch (error) {
+            console.error('Error updating contactos list:', error);
+        }
     };
 
-    const handleSearchColumnChange = (e) => {
-        setSearchColumn(e.target.value);
-    };
+    useEffect(() => {
+        if (addedData && addedData.status && addedData.data) {
+            setContactos(prevContactos => [...prevContactos, addedData.data.data]);
+        }
+    }, [addedData]);
 
     return (
         <>
-        { showView ?
-            (<>
-                <div>
-                    <input
-                        type="text"
-                        placeholder="Buscar..."
-                        value={searchTerm}
-                        onChange={handleSearchChange}
+            {showView ? (
+                <>
+                    <Table
+                        showData={show}
+                        loadingData={loading}
+                        DATA={contactos}
+                        setDATA={setContactos}
+                        updateContactosList={updateContactosList}
+                        functionToggleEditView={functionToggleEditView}
+                        isEditing={isEditing}
+                        toggleShowDetailsView={toggleShowDetailsView}
+                        showDetails={showDetails}
                     />
-                    <select value={searchColumn} onChange={handleSearchColumnChange}>
-                        <option value="">Seleccionar columna...</option>
-                        <option value="nombres">Nombre</option>
-                        <option value="apellido_paterno">Apellido Paterno</option>
-                        <option value="apellido_materno">Apellido Materno</option>
-                        <option value="fecha_nacimiento">Fecha de Nacimiento</option>
-                        <option value="alias">Alias</option>
-                    </select>
-                </div>
 
-                <Table 
-                showData={show}
-                loadingData={loading}
-                DATA={contactos}
-                setDATA={setContactos}/>
-                
-                <ToastContainer 
-                    position="bottom-center"
-                    bodyClassName="toast-body"/>
-        </>)
-        : (null) }
+                    <ToastContainer position="bottom-center" bodyClassName="toast-body" />
+                </>
+            ) : null}
         </>
     );
 }
