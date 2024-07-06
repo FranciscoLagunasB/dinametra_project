@@ -1,4 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import Form from 'react-bootstrap/Form';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import Button from 'react-bootstrap/Button';
+import { Box } from '@mui/material';
 import axios from 'axios';
 
 const ContactForm = ({ 
@@ -131,44 +136,15 @@ const ContactForm = ({
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const formData = new FormData();
-            formData.append('nombres', contacto.nombres);
-            formData.append('apellido_paterno', contacto.apellido_paterno);
-            formData.append('apellido_materno', contacto.apellido_materno);
-            formData.append('fecha_nacimiento', contacto.fecha_nacimiento);
-            formData.append('alias', contacto.alias);
-            formData.append('foto', contacto.foto);
-
-            // Append correos
-            contacto.correos.forEach((correo, index) => {
-                formData.append(`correos[${index}][correo]`, correo.correo);
-            });
-
-            // Append telefonos
-            contacto.telefonos.forEach((telefono, index) => {
-                formData.append(`telefonos[${index}][tipo]`, telefono.tipo);
-                formData.append(`telefonos[${index}][numero]`, telefono.numero);
-            });
-
-            // Append direcciones
-            contacto.direcciones.forEach((direccion, index) => {
-                formData.append(`direcciones[${index}][calle]`, direccion.calle);
-                formData.append(`direcciones[${index}][numero_exterior]`, direccion.numero_exterior);
-                formData.append(`direcciones[${index}][colonia]`, direccion.colonia);
-                formData.append(`direcciones[${index}][ciudad]`, direccion.ciudad);
-                formData.append(`direcciones[${index}][estado]`, direccion.estado);
-                formData.append(`direcciones[${index}][pais]`, direccion.pais);
-                formData.append(`direcciones[${index}][codigo_postal]`, direccion.codigo_postal);
-            });
-
             let jsonContacto = {};
-            // Agregar los campos individuales directamente al objeto JSON
             jsonContacto['nombres'] = contacto.nombres;
             jsonContacto['apellido_paterno'] = contacto.apellido_paterno;
             jsonContacto['apellido_materno'] = contacto.apellido_materno;
-            jsonContacto['fecha_nacimiento'] = contacto.fecha_nacimiento;
+            jsonContacto['fecha_nacimiento'] = contacto.fecha_nacimiento.toISOString().slice(0, 10);
             jsonContacto['alias'] = contacto.alias;
-            jsonContacto['foto'] = contacto.foto;
+            jsonContacto['foto'] = contacto.fotoBase64;
+
+            console.log(jsonContacto)
 
             // Agregar correos al objeto JSON
             jsonContacto['correos'] = [];
@@ -205,12 +181,11 @@ const ContactForm = ({
                 }
             });
 
+            console.log(jsonContacto)
             // Convertir a JSON string
-            const jsonContactoString = JSON.stringify(jsonContacto);
+            // const jsonContactoString = JSON.stringify(jsonContacto);
+            // console.log(jsonContactoString)
 
-            console.log(jsonContactoString)
-
-            console.log(formData)
 
             let apiUrl = 'http://localhost:8000/api/contactos/';
             if (isEdit) {
@@ -218,8 +193,8 @@ const ContactForm = ({
             }
 
             const response = isEdit
-                ? await axios.put(apiUrl, jsonContactoString)
-                : await axios.post(apiUrl, jsonContactoString);
+                ? await axios.put(apiUrl, jsonContacto)
+                : await axios.post(apiUrl, jsonContacto);
 
             if(isEdit){
                 functionUpdate(response)
@@ -227,13 +202,25 @@ const ContactForm = ({
             }else{
                 functionAddedData(response)
                 functionToggleView()
+                setContacto(initialState);
+                setCanEdit(false);
             }
-
-            console.log('Contacto guardado:', response.data);
-            // Lógica adicional después de enviar los datos
         } catch (error) {
             console.error('Error al guardar el contacto:', error);
-            // Manejo de errores
+        }
+    };
+
+    const handleImageChange = async (e) => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setContacto(prevState => ({
+                ...prevState,
+                fotoBase64: reader.result  // Almacena la imagen como base64
+            }));
+        };
+        if (file) {
+            reader.readAsDataURL(file);
         }
     };
 
@@ -245,59 +232,91 @@ const ContactForm = ({
                     <div>
                         <h2>{isEdit ? 'Editar Contacto' : 'Crear Nuevo Contacto'}</h2>
                         <form onSubmit={handleSubmit} encType="multipart/form-data">
-                            <label>Nombres:</label>
-                            <input type="text" name="nombres" value={contacto.nombres} onChange={handleInputChange} required />
+                        <div className="row mb-1">
+                            <div className="col">
+                            <Form.Label>Nombres:</Form.Label>
+                            <Form.Control type="text" name="nombres" value={contacto.nombres} onChange={handleInputChange} required/>
+                            </div>
 
-                            <label>Apellido Paterno:</label>
-                            <input type="text" name="apellido_paterno" value={contacto.apellido_paterno} onChange={handleInputChange} required />
+                            <div className="col">
+                            <Form.Label>Apellido Paterno:</Form.Label>
+                            <Form.Control type="text" name="apellido_paterno" value={contacto.apellido_paterno} onChange={handleInputChange} required/>
+                            </div>
 
-                            <label>Apellido Materno:</label>
-                            <input type="text" name="apellido_materno" value={contacto.apellido_materno} onChange={handleInputChange} required />
+                            <div className="col">
+                            <Form.Label>Apellido Materno:</Form.Label>
+                            <Form.Control type="text" name="apellido_materno" value={contacto.apellido_materno} onChange={handleInputChange} required/>
+                            </div>
+                        </div>
+                        
+                        <Form.Label>Alias:</Form.Label>
+                        <Form.Control type="text" name="alias" value={contacto.alias} onChange={handleInputChange} required/><br/>
 
-                            <label>Fecha de Nacimiento:</label>
-                            <input type="date" name="fecha_nacimiento" value={contacto.fecha_nacimiento} onChange={handleInputChange} required />
+                        <Form.Label>Fecha de Nacimiento:</Form.Label>
+                        <DatePicker
+                            selected={contacto.fecha_nacimiento}
+                            onChange={(date) => handleInputChange({ target: { name: 'fecha_nacimiento', value: date } })}
+                            dateFormat="yyyy-MM-dd"
+                            className="form-control"
+                            name="fecha_nacimiento" value={contacto.fecha_nacimiento}
+                            required
+                        /><br/>
 
-                            <label>Alias:</label>
-                            <input type="text" name="alias" value={contacto.alias} onChange={handleInputChange} required />
-
-                            <label>Foto:</label>
-                            <input type="file" name="foto" onChange={e => setContacto({ ...contacto, foto: e.target.files[0] })} accept="image/png" />
-
-                            <h3>Correos Electrónicos:</h3>
+                        <Form.Label>Foto:</Form.Label>
+                        <Form.Control type="file" name="foto" onChange={handleImageChange} accept="image/png"/>
+                            
+                        <Form.Label>Correos Electrónicos:</Form.Label>
                             {contacto.correos.map((correo, index) => (
                                 <div key={index}>
-                                    <input type="email" name="correo" value={correo.correo} onChange={e => handleCorreoChange(e, index)} />
-                                    <button type="button" onClick={() => handleRemoveCorreo(index)}>Eliminar</button>
+                                    <div className="row align-items-center">
+                                    <div className="col-auto"><Form.Control type="email" placeholder="name@example.com" name="correo" value={correo.correo} onChange={e => handleCorreoChange(e, index)}/></div>
+                                    <div className="col-auto"><Button variant="danger" type="button" onClick={() => handleRemoveCorreo(index)}>Eliminar</Button></div>
+                                    </div>
                                 </div>
                             ))}
-                            <button type="button" onClick={handleAddCorreo}>Agregar Correo</button>
-
-                            <h3>Teléfonos:</h3>
+                            <Button variant="info" type="button" className='mt-2' onClick={handleAddCorreo}>Agregar Correo</Button><br/>
+                        
+                        <Form.Label>Teléfonos:</Form.Label>
                             {contacto.telefonos.map((telefono, index) => (
-                                <div key={index}>
-                                    <input type="text" name="tipo" placeholder="Tipo" value={telefono.tipo} onChange={e => handleTelefonoChange(e, index)} />
-                                    <input type="text" name="numero" placeholder="Número" value={telefono.numero} onChange={e => handleTelefonoChange(e, index)} />
-                                    <button type="button" onClick={() => handleRemoveTelefono(index)}>Eliminar</button>
+                                <div key={index} className="row align-items-center">
+                                    <div className="col-auto">
+                                    <Form.Select aria-label="Default select example" name="tipo" placeholder="Tipo" value={telefono.tipo} onChange={e => handleTelefonoChange(e, index)}>
+                                    <option>Seleccionar</option>
+                                    <option value="Movil">Movil</option>
+                                    <option value="Fijo">Fijo</option>
+                                    </Form.Select></div>
+                                    <div className="col-auto"><Form.Control type="text" name="numero" placeholder="Número" value={telefono.numero} onChange={e => handleTelefonoChange(e, index)}/> </div>
+
+                                    <div className="col-auto"><Button variant="danger" type="button" onClick={() => handleRemoveTelefono(index)}>Eliminar</Button></div>
                                 </div>
                             ))}
-                            <button type="button" onClick={handleAddTelefono}>Agregar Teléfono</button>
+                            <Button variant="info" type="button" className='mt-2' onClick={handleAddTelefono}>Agregar Teléfono</Button><br/>
 
-                            <h3>Direcciones:</h3>
+                            <Form.Label>Direcciones::</Form.Label>
                             {contacto.direcciones.map((direccion, index) => (
-                                <div key={index}>
-                                    <input type="text" name="calle" placeholder="Calle" value={direccion.calle} onChange={e => handleDireccionChange(e, index)} />
-                                    <input type="text" name="numero_exterior" placeholder="Número Exterior" value={direccion.numero_exterior} onChange={e => handleDireccionChange(e, index)} />
-                                    <input type="text" name="colonia" placeholder="Colonia" value={direccion.colonia} onChange={e => handleDireccionChange(e, index)} />
-                                    <input type="text" name="ciudad" placeholder="Ciudad" value={direccion.ciudad} onChange={e => handleDireccionChange(e, index)} />
-                                    <input type="text" name="estado" placeholder="Estado" value={direccion.estado} onChange={e => handleDireccionChange(e, index)} />
-                                    <input type="text" name="pais" placeholder="País" value={direccion.pais} onChange={e => handleDireccionChange(e, index)} />
-                                    <input type="text" name="codigo_postal" placeholder="Código Postal" value={direccion.codigo_postal} onChange={e => handleDireccionChange(e, index)} />
-                                    <button type="button" onClick={() => handleRemoveDireccion(index)}>Eliminar</button>
+                                <div key={index} >
+                                    <div className="row mb-1">
+                                    <div className="col"><Form.Control type="text" name="calle" placeholder="Calle" value={direccion.calle} onChange={e => handleDireccionChange(e, index)} /></div>
+                                    <div className="col"><Form.Control type="text" name="numero_exterior" placeholder="Número Exterior" value={direccion.numero_exterior} onChange={e => handleDireccionChange(e, index)} /></div>
+                                    <div className="col"><Form.Control type="text" name="colonia" placeholder="Colonia" value={direccion.colonia} onChange={e => handleDireccionChange(e, index)} /></div>
+                                    </div>
+                                    <div className="row mb-1">
+                                    <div className="col"><Form.Control type="text" name="codigo_postal" placeholder="Código Postal" value={direccion.codigo_postal} onChange={e => handleDireccionChange(e, index)} /></div>
+                                    <div className="col"><Form.Control type="text" name="ciudad" placeholder="Ciudad" value={direccion.ciudad} onChange={e => handleDireccionChange(e, index)} /></div>
+                                    <div className="col"><Form.Control type="text" name="estado" placeholder="Estado" value={direccion.estado} onChange={e => handleDireccionChange(e, index)} /></div>
+                                    </div>
+                                    <div className="row mb-1">
+                                    <div className="col"><Form.Control type="text" name="pais" placeholder="Pais" value={direccion.pais} onChange={e => handleDireccionChange(e, index)} /></div>
+                                    <div className="col"><Button variant="danger" type="button" onClick={() => handleRemoveDireccion(index)}>Eliminar</Button></div>
+                                    </div>
                                 </div>
                             ))}
-                            <button type="button" onClick={handleAddDireccion}>Agregar Dirección</button>
+                            <Button variant="info" type="button" className='mt-2' onClick={handleAddDireccion}>Agregar Dirección</Button><br/>
 
-                            <button type="submit" disabled={!canEdit}>{isEdit ? 'Guardar Cambios' : 'Crear Contacto'}</button>
+                            <Box display="flex" justifyContent="flex-end">
+                                <Button variant="primary" type="submit" disabled={!canEdit}>{isEdit ? 'Guardar Cambios' : 'Crear Contacto'}</Button>
+                            </Box>
+
                         </form>
                     </div>
                 ) }

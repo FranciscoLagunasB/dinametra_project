@@ -1,0 +1,80 @@
+.details-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  
+    .contact-info {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+  
+      .profile-picture {
+        width: 100px; /* Ancho fijo para el contenedor */
+        height: 100px; /* Altura fija para el contenedor */
+        border-radius: 50%; /* Borde redondeado para la imagen */
+        overflow: hidden; /* Ocultar contenido que exceda los límites del contenedor */
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+      }
+      
+      .profile-picture img {
+        width: 100%; /* Hacer que la imagen ocupe todo el contenedor */
+        height: auto; /* Altura automática para mantener la proporción */
+        object-fit: cover; /* Escalar la imagen para que llene el contenedor, manteniendo la relación de aspecto */
+      }
+      
+  
+      .info-details {
+        flex: 2;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+  
+        h2 {
+          text-align: left;
+          margin-bottom: 10px;
+        }
+  
+        p {
+          text-align: left;
+          margin-bottom: 5px;
+        }
+  
+        strong {
+          font-weight: bold;
+        }
+      }
+    }
+  
+    .contact-details {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      margin-top: 20px;
+  
+      .contact-section {
+        flex: 1;
+        margin-right: 20px;
+  
+        h3 {
+          margin-bottom: 10px;
+        }
+  
+        ul {
+          list-style-type: none;
+          padding: 0;
+  
+          li {
+            margin-bottom: 5px;
+          }
+        }
+      }
+    }
+  }
+  

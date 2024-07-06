@@ -42,7 +42,6 @@ function Table({ showData, DATA, setDATA, updateContactosList, functionToggleEdi
     ];
 
     const handleView = (row) => {
-        // console.log(`Ver registro con ID ${id}`);
         toggleShowDetailsView();
         setEditData(row);
     };
@@ -58,10 +57,6 @@ function Table({ showData, DATA, setDATA, updateContactosList, functionToggleEdi
             if (response.status === 201) {
                 const updatedData = DATA.filter((item) => item.contacto_PK !== id);
                 setDATA(updatedData);
-                console.log(updatedData)
-                console.log(`Registro con ID ${id} eliminado correctamente`);
-            } else {
-                console.log(`Error al eliminar el registro con ID ${id}`);
             }
         } catch (error) {
             console.error('Error al intentar eliminar el registro:', error);
@@ -78,13 +73,7 @@ function Table({ showData, DATA, setDATA, updateContactosList, functionToggleEdi
                 return item;
             });
             setDATA(updatedData);
-            console.log('Datos actualizados:', updatedData);
-            console.log('Datos actualizados:', updatedData);
         }
-
-        // const updatedData = DATA.filter((item) => item.contacto_PK !== id);
-        // setDATA(updatedData);
-        // console.log(updatedData)
     }
 
     let rows = DATA.map((row, index) => ({ id: index + 1, ...row }));

@@ -1,33 +1,43 @@
-import React from 'react'
+import React from 'react';
 import './DetailsView.scss';
 
-function DetailsView({data}) {
-    console.log(data)
+function DetailsView({ data }) {
     // Función para obtener la URL de la imagen o una por defecto
     const getFotoURL = () => {
+        console.log(data)
         if (data.foto) {
-            // Si hay foto, retornamos la URL de la foto (reemplaza la URL por la tuya)
-            return `URL_DE_TU_SERVIDOR/${data.foto}`;
+            const base64Image = data.foto.split(',')[1];
+
+            // Decodificar la imagen base64
+            const byteCharacters = atob(base64Image);
+            const byteNumbers = new Array(byteCharacters.length);
+            for (let i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            const byteArray = new Uint8Array(byteNumbers);
+            const blob = new Blob([byteArray], { type: 'image/png' }); // Ajusta el tipo según el formato de tu imagen
+            const imageUrl = URL.createObjectURL(blob);
+            return imageUrl;
         } else {
-            // Si no hay foto, retornamos una imagen por defecto (ejemplo de Google)
-            return 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png';
+            return 'https://static.vecteezy.com/system/resources/thumbnails/002/318/271/small_2x/user-profile-icon-free-vector.jpg';
         }
     };
 
     return (
         <div className="details-container">
-            <h2>Detalles del contacto</h2>
-            <div className="profile-picture">
-                <img src={getFotoURL()} alt="Foto de perfil" style={{ width: 200, height: 200, borderRadius: '50%' }} />
-            </div>
             <div className="contact-info">
-                <h3>{`${data.nombres} ${data.apellido_paterno} ${data.apellido_materno}`}</h3>
-                <p>Alias: {data.alias}</p>
-                <p>Fecha de nacimiento: {data.fecha_nacimiento}</p>
+                <div className="profile-picture">
+                    <img src={getFotoURL()} alt="Foto de perfil" />
+                </div>
+                <div className="contact-details">
+                    <h2>{`${data.nombres.toUpperCase()} ${data.apellido_paterno.toUpperCase()} ${data.apellido_materno.toUpperCase()}`}</h2>
+                    <p><strong>Alias:</strong> {data.alias}</p>
+                    <p><strong>Fecha de nacimiento:</strong> {data.fecha_nacimiento}</p>
+                </div>
             </div>
             <div className="contact-details">
                 <div>
-                    <h4>Correos:</h4>
+                    <h3>Correos:</h3>
                     <ul>
                         {data.correos.map(correo => (
                             <li key={correo.correo_PK}>{correo.correo}</li>
@@ -35,7 +45,7 @@ function DetailsView({data}) {
                     </ul>
                 </div>
                 <div>
-                    <h4>Teléfonos:</h4>
+                    <h3>Teléfonos:</h3>
                     <ul>
                         {data.telefonos.map(telefono => (
                             <li key={telefono.telefono_PK}>{telefono.tipo}: {telefono.numero}</li>
@@ -43,7 +53,7 @@ function DetailsView({data}) {
                     </ul>
                 </div>
                 <div>
-                    <h4>Direcciones:</h4>
+                    <h3>Direcciones:</h3>
                     <ul>
                         {data.direcciones.map(direccion => (
                             <li key={direccion.direccion_PK}>
@@ -57,4 +67,4 @@ function DetailsView({data}) {
     );
 }
 
-export default DetailsView
+export default DetailsView;

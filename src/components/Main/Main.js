@@ -1,9 +1,11 @@
 import React, {useState} from 'react';
+import Button from 'react-bootstrap/Button';
 import './Main.scss';
 import PageTitle from '../PageTitle/PageTitle';
 import ContactsPanel from '../Dashboard/ContactsPanel/ContactsPanel';
 
 import ContactForm from '../Dashboard/Form/ContactForm';
+import { Box } from '@mui/material';
 
 function Main() {
 
@@ -18,7 +20,6 @@ function Main() {
 
     const addedData = (res) =>{
       setNewData(res)
-      console.log(res.data.data)
     }
 
 
@@ -27,16 +28,17 @@ function Main() {
     };
 
     const toggleShowDetailsView = () => {
-      console.log(showDetails)
       setShowDetails(!showDetails);
     }
 
   return (
     <main id='main' className='main'>
         <PageTitle page="Dashboard"/>
-        { isEditing && <button onClick={toggleEditView}>Cancelar</button>}
-        { !isEditing && !showDetails && <button onClick={toggleShowView}>{showView ? 'Añadir registro' : 'Cancelar'}</button>}
-        { showDetails && <button onClick={toggleShowDetailsView}>Cancelar</button> }
+        <Box display="flex" justifyContent="flex-end">
+          { isEditing && <Button variant="danger" onClick={toggleEditView}>Cancelar</Button>}
+          { !isEditing && !showDetails && <Button variant={showView ? 'primary' : 'danger'} primary onClick={toggleShowView}>{showView ? 'Añadir registro' : 'Cancelar'}</Button>}
+          { showDetails && <Button variant="danger" onClick={toggleShowDetailsView}>Cancelar</Button> }
+        </Box>
         <ContactForm 
           showView={showView}
           functionAddedData={addedData}
