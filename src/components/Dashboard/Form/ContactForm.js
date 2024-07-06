@@ -181,12 +181,6 @@ const ContactForm = ({
                 }
             });
 
-            console.log(jsonContacto)
-            // Convertir a JSON string
-            // const jsonContactoString = JSON.stringify(jsonContacto);
-            // console.log(jsonContactoString)
-
-
             let apiUrl = 'http://localhost:8000/api/contactos/';
             if (isEdit) {
                 apiUrl = `http://localhost:8000/api/contactos/${contacto.contacto_PK}/`;

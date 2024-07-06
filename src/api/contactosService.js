@@ -1,8 +1,6 @@
-// En tu servicio (por ejemplo, services/contactosService.js)
-
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:8000';  // Reemplaza con la URL de tu servidor Django
+const BASE_URL = 'http://localhost:8000';
 
 const contactosService = {
     getAll: async () => {
@@ -11,10 +9,9 @@ const contactosService = {
             return response.data;
         } catch (error) {
             console.error('Error fetching contactos:', error);
-            throw error;  // O maneja el error según tus necesidades
+            throw error;
         }
     },
-    // Puedes definir otras funciones para crear, actualizar o eliminar contactos según tu API
 };
 
 export default contactosService;

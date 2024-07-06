@@ -2,7 +2,6 @@ import React from 'react';
 import './DetailsView.scss';
 
 function DetailsView({ data }) {
-    // Función para obtener la URL de la imagen o una por defecto
     const getFotoURL = () => {
         console.log(data)
         if (data.foto) {
@@ -15,7 +14,7 @@ function DetailsView({ data }) {
                 byteNumbers[i] = byteCharacters.charCodeAt(i);
             }
             const byteArray = new Uint8Array(byteNumbers);
-            const blob = new Blob([byteArray], { type: 'image/png' }); // Ajusta el tipo según el formato de tu imagen
+            const blob = new Blob([byteArray], { type: 'image/png' });
             const imageUrl = URL.createObjectURL(blob);
             return imageUrl;
         } else {
